@@ -1,0 +1,75 @@
+Steps:
+======
+PREPARE: prepares the statement for execution.
+EXECUTE: executes the prepared statement.
+DEALLOCATE PREPARE: releases the prepared statement.
+
+Eg:
+===
+	Prepare a query statement:
+	--------------------------
+	mysql> prepare stmt1 from 'select sqrt(pow(?,2) + pow(?,2)) as hypotenuse';
+	Query OK, 0 rows affected (0.00 sec)
+	Statement prepared
+
+	mysql> set @a = 3;
+	Query OK, 0 rows affected (0.00 sec)
+
+	mysql> set @b = 4;
+	Query OK, 0 rows affected (0.00 sec)
+
+	Executing a prepared statement:
+	-------------------------------
+	mysql> execute stmt1 using @a, @b;
+	+------------+
+	| hypotenuse |
+	+------------+
+	|          5 |
+	+------------+
+	1 row in set (0.01 sec)
+
+	mysql> execute stmt1 using @a, @a;
+	+-------------------+
+	| hypotenuse        |
+	+-------------------+
+	| 4.242640687119285 |
+	+-------------------+
+	1 row in set (0.00 sec)
+
+	mysql> execute stmt1 using @a, @b;
+	+------------+
+	| hypotenuse |
+	+------------+
+	|          5 |
+	+------------+
+	1 row in set (0.00 sec)
+
+	mysql> execute stmt1 using @b, @b;
+	+-------------------+
+	| hypotenuse        |
+	+-------------------+
+	| 5.656854249492381 |
+	+-------------------+
+	1 row in set (0.00 sec)
+
+	Deallocating prepared query statement:
+	--------------------------------------
+	mysql> deallocate prepare stmt1;
+	Query OK, 0 rows affected (0.00 sec)
+
+	Execution after deallocation of query statement:
+	------------------------------------------------
+	mysql> execute stmt1 using @b, @b;
+	ERROR 1243 (HY000): Unknown prepared statement handler (stmt1) given to EXECUTE
+	mysql> execute stmt using @b, @b;
+	ERROR 1243 (HY000): Unknown prepared statement handler (stmt) given to EXECUTE
+
+	Trying to allocate it again using prepared query statement:
+	-----------------------------------------------------------
+	mysql> allocate prepare stmt1;
+	ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'allocate prepare stmt1' at line 1
+
+
+Ref:
+====
+https://www.databasejournal.com/features/mysql/a-guide-to-mysql-prepared-statements-and-parameterized-queries.html
