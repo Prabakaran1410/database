@@ -1,0 +1,31 @@
+MongoDB:
+=======
+
+Making a Connection with MongoClient:
+    client = MongoClient('localhost', 27017) //or
+    client = MongoClient('mongodb://localhost:27017/')
+	
+Getting a database:
+    db = client.database_name //or
+    db = client['database_name']
+
+Getting a collection:
+    collection = db.collection_name //or
+    collection = db['collection_name']
+    
+Documents - (record of a table)
+    = PyMongo uses dictionaries to represent documents(records)
+
+Inserting the documents in collection:
+    collection.insert_one(data) // data - JSON info in key value pairs
+
+Get data based on the Query
+    data_info = collection.find({"createddate": {"$gt": 1571901613645}})  //returns all the record as cursor object
+    collection.find_one() // returns the record available at the top of the table
+    collection.find_one({"createddate":{"$gt": 1571901613645}})
+
+Deleting the documents from the collection:
+     collection.delete_one()
+     collection.delete_many()
+     collection.find_one_and_delete()
+     
