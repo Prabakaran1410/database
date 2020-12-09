@@ -1,0 +1,36 @@
+Error - 
+=========
+  mongo
+  MongoDB shell version v4.2.8
+  connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+  2020-12-09T18:14:07.053+0530 E  QUERY    [js] Error: couldn't connect to server 127.0.0.1:27017, connection attempt failed: SocketException: Error connecting to 127.0.0.1:27017 :: caused by :: Connection refused :
+  connect@src/mongo/shell/mongo.js:341:17
+  @(connect):2:6
+  2020-12-09T18:14:07.067+0530 F  -        [main] exception: connect failed
+  2020-12-09T18:14:07.067+0530 E  -        [main] exiting with code 1
+  
+Steps to recover - 
+==================
+Step 1: Remove lock file.
+sudo rm /var/lib/mongodb/mongod.lock
+
+Step 2: Repair mongodb. 
+sudo mongod --repair 
+
+Step 3: start mongodb.
+sudo start mongodb 
+or
+sudo service mongodb start
+
+Step 4: Check status of mongodb.
+sudo status mongodb 
+or   
+sudo service mongodb status
+
+
+In case of mask issue when starting the mongo db
+ Eg -  sudo service mongodb start
+       Failed to start mongodb.service: Unit mongodb.service is masked.
+Use the command to unmask - 
+sudo systemctl unmask mongodb
+
